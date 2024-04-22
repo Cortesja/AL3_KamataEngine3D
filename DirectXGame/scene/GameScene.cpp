@@ -2,12 +2,15 @@
 #include "TextureManager.h"
 #include <cassert>
 #include "ImGuiManager.h"
+#include "PrimitiveDrawer.h"
+#include "AxisIndicator.h"
 
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
 	delete sprite_;
 	delete model_;
+	delete debugCamera_;
 }
 
 void GameScene::Initialize() {
@@ -26,6 +29,12 @@ void GameScene::Initialize() {
 	voiceHandle_ = audio_->PlayWave(soundDataHandle_, true);
 
 	model_ = Model::Create();
+
+	debugCamera_ = new DebugCamera(1280, 720);
+	AxisIndicator::GetInstance()->SetVisible(true);
+	AxisIndicator::GetInstance()->SetTargetViewProjection(&debugCamera_->GetViewProjection());
+
+	PrimitiveDrawer::GetInstance()->SetViewProjection(&debugCamera_->GetViewProjection());
 }
 
 void GameScene::Update() {
@@ -36,6 +45,8 @@ void GameScene::Update() {
 
 	sprite_->SetPosition(position);
 
+	debugCamera_->Update();
+
 	if (input_->TriggerKey(DIK_SPACE)) {
 		if (audio_->IsPlaying(voiceHandle_)) {
 			audio_->StopWave(voiceHandle_);
@@ -44,6 +55,8 @@ void GameScene::Update() {
 			voiceHandle_ = audio_->PlayWave(soundDataHandle_, true);
 		}
 	}
+
+#ifdef _DEBUG
 
 	ImGui::Begin("PlayerParameter");
 	ImGui::Text("Name : Kamata Tarou %d.%d.%d", 2050, 12, 31);
@@ -54,6 +67,9 @@ void GameScene::Update() {
 	ImGui::End();
 
 	ImGui::ShowDemoWindow();
+
+#endif // DEBUG
+
 }
 
 void GameScene::Draw() {
@@ -82,7 +98,28 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	model_->Draw(worldTransform_, viewProjection_, textureHandle_);
+	model_->Draw(worldTransform_, debugCamera_->GetViewProjection(), textureHandle_);
+
+	int lineMeshWidth = 60;
+	int lineMeshHeight = 60;
+	int lineMeshSpanH = 3;
+	int lineMeshSpanW = 3;
+
+	for (int h = -lineMeshWidth / 2; h <= lineMeshWidth / 2; h += lineMeshSpanH) {
+		PrimitiveDrawer::GetInstance()->DrawLine3d(
+			{ (float)h, (float)-lineMeshWidth / 2,0},
+			{ (float)h, (float)lineMeshWidth / 2,0 },
+			{ 0.0f,0.0f,1.0f,1.0f }
+		);
+	}
+
+	for (int v = -lineMeshHeight / 2; v <= lineMeshHeight / 2; v += lineMeshSpanW) {
+		PrimitiveDrawer::GetInstance()->DrawLine3d(
+			{ (float)-lineMeshHeight / 2, (float)v, 0},
+			{ (float)lineMeshHeight / 2, (float)v, 0},
+			{ 1.0f,0.0f,0.0f,1.0f }
+		);
+	}
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
