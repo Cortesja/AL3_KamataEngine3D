@@ -16,7 +16,8 @@ public:
 	/// </summary>
 	/// <param name="model">モデルのポインター</param>
 	/// <param name="textureHandler">テクスチャーハンドル</param>
-	void Initialize(Model *model, uint32_t textureHandler);
+	/// <param name="viewProjection">ビュープロジェクション</param>
+	void Initialize(Model* model, uint32_t textureHandler, ViewProjection* viewProjection);
 
 	/// <summary>
 	/// 更新
@@ -31,6 +32,8 @@ public:
 private:
 	//ワールド変換データ
 	WorldTransform worldTransform_;
+	//ビュープロジェクション
+	ViewProjection* viewProjection_;
 	//モデル
 	Model* model_ = nullptr;
 	//テクスチャーハンドル

@@ -21,7 +21,7 @@ void GameScene::Initialize() {
 	viewProjection_.Initialize();
 
 	player_ = new Player();
-	player_->Initialize(model_, playerTextureHandler_);
+	player_->Initialize(model_, playerTextureHandler_, &viewProjection_);
 }
 
 void GameScene::Update() {
