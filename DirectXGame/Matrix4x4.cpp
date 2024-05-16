@@ -308,11 +308,11 @@ Matrix4x4 RotateZ(const float& theta)
 	return Matrix4x4();
 }
 
-Matrix4x4 RotateXYZ(const Vector3& theta)
+Matrix4x4 MakeRotateXYZ(const Vector3& theta)
 {
 	return Multiply(Multiply(RotateX(theta.x), RotateY(theta.y)), RotateZ(theta.z));
 }
 
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& transform, const Vector3& rotate) {
-	return Multiply(Multiply(Scale(scale), RotateXYZ(rotate)), Transform(transform));
+	return Multiply(Multiply(Scale(scale), MakeRotateXYZ(rotate)), MakeTranslateMatrix(transform));
 }

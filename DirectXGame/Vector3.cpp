@@ -1,5 +1,4 @@
 #include "Vector3.h"
-#include "Novice.h"
 #include <math.h>
 
 Vector3 Add(const Vector3& v1, const Vector3& v2) {
