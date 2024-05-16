@@ -15,13 +15,17 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-
+	//プレイヤー用の初期化
 	playerTextureHandler_ = TextureManager::Load("/cube/cube.jpg");
 	model_ = Model::Create();
 	viewProjection_.Initialize();
 
 	player_ = new Player();
 	player_->Initialize(model_, playerTextureHandler_, &viewProjection_);
+	//プレイヤーの初期化終了
+
+
+
 }
 
 void GameScene::Update() {
