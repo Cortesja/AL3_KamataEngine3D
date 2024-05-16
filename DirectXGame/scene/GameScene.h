@@ -49,9 +49,11 @@ private: // メンバ変数
 	/// ゲームシーン用
 	/// </summary>
 
+	//プレイヤーを初期化するための
 	uint32_t playerTextureHandler_ = 0;
 	Model *model_ = nullptr;
 	ViewProjection viewProjection_;
 
 	Player* player_ = nullptr;
+	//プレイヤー使用する変数は終了
 };
