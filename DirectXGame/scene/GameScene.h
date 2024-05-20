@@ -63,6 +63,5 @@ private: // メンバ変数
 	uint32_t blockTextureHandler_ = 0;
 	ViewProjection blockViewProjection_;
 
-	WorldTransform* worldTransformBlocks_;
 	std::vector<WorldTransform*> worldTransformBlocks_;
 };

@@ -49,9 +49,8 @@ void GameScene::Update() {
 	player_->Update();
 
 	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
-		MakeScaleMatrix(worldTransformBlock->scale_);
-		MakeRotateXYZ(worldTransformBlock->rotation_);
-		MakeTranslateMatrix(worldTransformBlock->translation_);
+		worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+		worldTransformBlock->TransferMatrix();
 	}
 }
 
@@ -81,7 +80,12 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	player_->Draw();
+	
+	//player_->Draw();
+
+	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
+		blockModel_->Draw(*worldTransformBlock, viewProjection_);
+	}
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

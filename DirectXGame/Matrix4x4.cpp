@@ -264,17 +264,6 @@ Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix)
 	return result;
 }
 
-Matrix4x4 Scale(const Vector3& scale)
-{
-	Matrix4x4 result = {
-		scale.x, 0.0f, 0.0f, 0.0f,
-		0.0f, scale.y, 0.0f, 0.0f,
-		0.0f, 0.0f, scale.z, 0.0f,
-		0.0f, 0.0f, 0.0f, 1.0f
-	};
-	return result;
-}
-
 Matrix4x4 RotateX(const float& theta)
 {
 	Matrix4x4 result = {
@@ -313,6 +302,6 @@ Matrix4x4 MakeRotateXYZ(const Vector3& theta)
 	return Multiply(Multiply(RotateX(theta.x), RotateY(theta.y)), RotateZ(theta.z));
 }
 
-Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& transform, const Vector3& rotate) {
-	return Multiply(Multiply(Scale(scale), MakeRotateXYZ(rotate)), MakeTranslateMatrix(transform));
+Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& transform) {
+	return Multiply(Multiply(MakeScaleMatrix(scale), MakeRotateXYZ(rotate)), MakeTranslateMatrix(transform));
 }
