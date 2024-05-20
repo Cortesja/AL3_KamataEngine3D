@@ -47,4 +47,5 @@ private: // メンバ変数
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
+	void GenerateBlocks();
 };
