@@ -47,6 +47,12 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 	player_->Update();
+
+	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
+		MakeScaleMatrix(worldTransformBlock->scale_);
+		MakeRotateXYZ(worldTransformBlock->rotation_);
+		MakeTranslateMatrix(worldTransformBlock->translation_);
+	}
 }
 
 void GameScene::Draw() {
