@@ -4,13 +4,56 @@
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() {}
+GameScene::~GameScene() {
+	delete model_;
+	delete player_;
+	delete blockModel_;
+	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
+		delete worldTransformBlock;
+	}
+	worldTransformBlocks_.clear();
+}
+
+void GameScene::GenerateBlocks()
+{
+	uint32_t numBlockVertical = mapChipField_->GetNumBlockVertical();
+	uint32_t numBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
+}
 
 void GameScene::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
+
+	//プレイヤー用の初期化
+	playerTextureHandler_ = TextureManager::Load("/cube/cube.jpg");
+	model_ = Model::Create();
+	viewProjection_.Initialize();
+
+	player_ = new Player();
+	player_->Initialize(model_, playerTextureHandler_, &viewProjection_);
+	//プレイヤーの初期化終了
+
+	blockModel_ = Model::Create();
+	blockTextureHandler_ = TextureManager::Load("/cube/cube.jpg");
+	blockViewProjection_.Initialize();
+
+	const uint32_t kNumBlockHorizontal = 20;
+	const float kBlockWidth = 2.0f;
+	worldTransformBlocks_.resize(kNumBlockHorizontal);
+
+	for (uint32_t i = 0; i < kNumBlockHorizontal; ++i) {
+		worldTransformBlocks_[i] = new WorldTransform();
+		worldTransformBlocks_[i]->Initialize();
+		worldTransformBlocks_[i]->translation_.x = kBlockWidth * i;
+		worldTransformBlocks_[i]->translation_.y = 0.0f;
+	}
+
+	//MapChipField用の下書き
+	mapChipField_->Initialize();
+
+	worldTransformBlocks_.resize()
 }
 
 void GameScene::Update() {}

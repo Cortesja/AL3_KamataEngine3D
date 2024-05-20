@@ -7,6 +7,8 @@
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include <MapChipField.h>
+
 
 /// <summary>
 /// ゲームシーン
@@ -23,6 +25,8 @@ public: // メンバ関数
 	/// デストラクタ
 	/// </summary>
 	~GameScene();
+
+	void GenerateBlocks();
 
 	/// <summary>
 	/// 初期化
@@ -47,5 +51,21 @@ private: // メンバ変数
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
-	void GenerateBlocks();
+	
+	//プレイヤーを初期化するための
+	uint32_t playerTextureHandler_ = 0;
+	Model* model_ = nullptr;
+	ViewProjection viewProjection_;
+
+	Player* player_ = nullptr;
+	//プレイヤー使用する変数は終了
+
+	Model* blockModel_ = nullptr;
+	uint32_t blockTextureHandler_ = 0;
+	ViewProjection blockViewProjection_;
+
+	WorldTransform* worldTransformBlocks_;
+	std::vector<WorldTransform*> worldTransformBlocks_;
+
+	MapChipField* mapChipField_;
 };

@@ -21,7 +21,7 @@ private:
 	static inline const float kBlockWidth = 1.0f;
 	static inline const float kBlockHeight = 1.0f;
 
-	static inline const uint32_t kNumBlockVirtical = 20;
+	static inline const uint32_t kNumBlockVertical = 20;
 	static inline const uint32_t kNumBlockHorizontal = 100;
 
 	MapChipData mapChipData_;
@@ -32,6 +32,9 @@ public:
 
 	void ResetMapChipData();
 	void LoadMapChipCsv(const std::string& filePath);
+
+	uint32_t GetNumBlockVertical() { return kNumBlockVertical; }
+	uint32_t GetNumBlockHorizontal() { return kNumBlockHorizontal; }
 
 	/// <summary>
 	/// 初期化
