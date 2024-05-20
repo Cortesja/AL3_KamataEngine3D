@@ -21,7 +21,7 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 
 	//プレイヤー用の初期化
-	playerTextureHandler_ = TextureManager::Load("/cube/cube.jpg");
+	playerTextureHandler_ = TextureManager::Load("cube/cube.jpg");
 	model_ = Model::Create();
 	viewProjection_.Initialize();
 
@@ -30,8 +30,7 @@ void GameScene::Initialize() {
 	//プレイヤーの初期化終了
 
 	blockModel_ = Model::Create();
-	blockTextureHandler_ = TextureManager::Load("/cube/cube.jpg");
-	blockViewProjection_.Initialize();
+	blockTextureHandler_ = TextureManager::Load("cube/cube.jpg");
 
 	const uint32_t kNumBlockHorizontal = 20;
 	const float kBlockWidth = 2.0f;
@@ -49,7 +48,7 @@ void GameScene::Update() {
 	player_->Update();
 
 	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
-		worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+		worldTransformBlock->UpdateMatrix();
 		worldTransformBlock->TransferMatrix();
 	}
 }
@@ -81,10 +80,10 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 	
-	//player_->Draw();
+	player_->Draw();
 
 	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
-		blockModel_->Draw(*worldTransformBlock, viewProjection_);
+		blockModel_->Draw(*worldTransformBlock, viewProjection_, blockTextureHandler_);
 	}
 
 	// 3Dオブジェクト描画後処理

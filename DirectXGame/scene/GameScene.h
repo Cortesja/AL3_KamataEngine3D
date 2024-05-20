@@ -60,8 +60,7 @@ private: // メンバ変数
 	//プレイヤー使用する変数は終了
 
 	Model* blockModel_ = nullptr;
-	uint32_t blockTextureHandler_ = 0;
-	ViewProjection blockViewProjection_;
+	uint32_t blockTextureHandler_ = 0u;
 
 	std::vector<WorldTransform*> worldTransformBlocks_;
 };

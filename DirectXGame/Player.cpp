@@ -6,7 +6,7 @@ Player::Player()
 }
 
 Player::~Player(){
-	delete model_;
+
 }
 
 void Player::Initialize(Model* model, uint32_t textureHandler, ViewProjection *viewProjection) {

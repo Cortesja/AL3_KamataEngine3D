@@ -283,7 +283,7 @@ Matrix4x4 RotateY(const float& theta)
 		sinf(theta), 0.0f, cosf(theta), 0.0f,
 		0.0f, 0.0f, 0.0f, 1.0f
 	};
-	return Matrix4x4();
+	return result;
 }
 
 Matrix4x4 RotateZ(const float& theta)
@@ -294,14 +294,29 @@ Matrix4x4 RotateZ(const float& theta)
 		0.0f, 0.0f, 1.0f, 0.0f,
 		0.0f, 0.0f, 0.0f, 1.0f
 	};
-	return Matrix4x4();
+	return result;
+}
+
+void update()
+{
 }
 
 Matrix4x4 MakeRotateXYZ(const Vector3& theta)
 {
-	return Multiply(Multiply(RotateX(theta.x), RotateY(theta.y)), RotateZ(theta.z));
+	Matrix4x4 rotX = RotateX(theta.x);
+	Matrix4x4 rotY = RotateY(theta.y);
+	Matrix4x4 rotZ = RotateZ(theta.z);
+	Matrix4x4 rotXY = Multiply(rotX, rotY);
+	Matrix4x4 result = Multiply(rotXY, rotZ);
+
+	return result;
 }
 
-Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& transform) {
-	return Multiply(Multiply(MakeScaleMatrix(scale), MakeRotateXYZ(rotate)), MakeTranslateMatrix(transform));
+Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
+	Matrix4x4 scaleMat = MakeScaleMatrix(scale);
+	Matrix4x4 rotateXYZ = MakeRotateXYZ(rotate);
+	Matrix4x4 translateMat = MakeTranslateMatrix(translate);
+	Matrix4x4 mulRotateScale = Multiply( rotateXYZ, scaleMat);
+	Matrix4x4 result =  Multiply(mulRotateScale, translateMat);
+	return result;
 }
