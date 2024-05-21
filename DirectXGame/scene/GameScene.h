@@ -62,5 +62,5 @@ private: // メンバ変数
 	Model* blockModel_ = nullptr;
 	uint32_t blockTextureHandler_ = 0u;
 
-	std::vector<WorldTransform*> worldTransformBlocks_;
+	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 };

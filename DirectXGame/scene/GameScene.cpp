@@ -8,8 +8,10 @@ GameScene::~GameScene() {
 	delete model_;
 	delete player_;
 	delete blockModel_;
-	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
-		delete worldTransformBlock;
+	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+			delete worldTransformBlock;
+		}
 	}
 	worldTransformBlocks_.clear();
 }
@@ -33,23 +35,36 @@ void GameScene::Initialize() {
 	blockTextureHandler_ = TextureManager::Load("cube/cube.jpg");
 
 	const uint32_t kNumBlockHorizontal = 20;
-	const float kBlockWidth = 2.0f;
-	worldTransformBlocks_.resize(kNumBlockHorizontal);
+	const uint32_t kNumBlockVertical = 10;
 
-	for (uint32_t i = 0; i < kNumBlockHorizontal; ++i) {
-		worldTransformBlocks_[i] = new WorldTransform();
-		worldTransformBlocks_[i]->Initialize();
-		worldTransformBlocks_[i]->translation_.x = kBlockWidth * i;
-		worldTransformBlocks_[i]->translation_.y = 0.0f;
+	const float kBlockHeight = 2.0f;
+	const float kBlockWidth = 2.0f;
+
+	worldTransformBlocks_.resize(kNumBlockVertical);
+	for (uint32_t i = 0; i < kNumBlockVertical; ++i) {
+		worldTransformBlocks_[i].resize(kNumBlockHorizontal);
+	}
+
+	for (uint32_t i = 0; i < kNumBlockVertical; ++i) {
+		for (uint32_t j = 0; j < kNumBlockHorizontal; ++j) {
+			worldTransformBlocks_[i][j] = new WorldTransform();
+			worldTransformBlocks_[i][j]->Initialize();
+			worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * j;
+			worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * i;
+		}
 	}
 }
 
 void GameScene::Update() {
 	player_->Update();
 
-	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
-		worldTransformBlock->UpdateMatrix();
-		worldTransformBlock->TransferMatrix();
+	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+			if (!worldTransformBlock) {
+				continue;
+			}
+			worldTransformBlock->UpdateMatrix();
+		}
 	}
 }
 
@@ -82,8 +97,10 @@ void GameScene::Draw() {
 	
 	player_->Draw();
 
-	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
-		blockModel_->Draw(*worldTransformBlock, viewProjection_, blockTextureHandler_);
+	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+			blockModel_->Draw(*worldTransformBlock, viewProjection_, blockTextureHandler_);
+		}
 	}
 
 	// 3Dオブジェクト描画後処理
