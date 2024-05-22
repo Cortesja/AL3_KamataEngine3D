@@ -10,6 +10,7 @@
 #include "Player.h"
 #include "Matrix4x4.h"
 #include <vector>
+#include "DebugCamera.h"
 
 /// <summary>
 /// ゲームシーン
@@ -53,7 +54,7 @@ private: // メンバ変数
 
 	//プレイヤーを初期化するための
 	uint32_t playerTextureHandler_ = 0;
-	Model *model_ = nullptr;
+	Model* model_ = nullptr;
 	ViewProjection viewProjection_;
 
 	Player* player_ = nullptr;
@@ -63,4 +64,7 @@ private: // メンバ変数
 	uint32_t blockTextureHandler_ = 0u;
 
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
+
+	DebugCamera* debugCamera_ = nullptr;
+	bool isDebugCameraActive_ = false;
 };

@@ -8,6 +8,7 @@ GameScene::~GameScene() {
 	delete model_;
 	delete player_;
 	delete blockModel_;
+	delete debugCamera_;
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			delete worldTransformBlock;
@@ -31,6 +32,7 @@ void GameScene::Initialize() {
 	player_->Initialize(model_, playerTextureHandler_, &viewProjection_);
 	//プレイヤーの初期化終了
 
+	//ブロック用な処理
 	blockModel_ = Model::Create();
 	blockTextureHandler_ = TextureManager::Load("cube/cube.jpg");
 
@@ -49,14 +51,23 @@ void GameScene::Initialize() {
 		for (uint32_t j = 0; j < kNumBlockHorizontal; ++j) {
 			worldTransformBlocks_[i][j] = new WorldTransform();
 			worldTransformBlocks_[i][j]->Initialize();
-			worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * j;
-			worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * i;
+			if (i % 2 == 0) {
+				worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * j;
+			}
+			if (j % 2 == 0) {
+				worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * i;
+			}
 		}
 	}
+	//ブロック終了
+
+	//デバッグカメラ生成
+	debugCamera_ = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
 }
 
 void GameScene::Update() {
 	player_->Update();
+	debugCamera_->Update();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -65,6 +76,23 @@ void GameScene::Update() {
 			}
 			worldTransformBlock->UpdateMatrix();
 		}
+	}
+
+#ifdef _DEBUG
+	if (input_->TriggerKey(DIK_1)) {
+		isDebugCameraActive_ = true;
+	}
+#endif
+
+	if (isDebugCameraActive_) {
+		debugCamera_->Update();
+		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
+		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+
+		viewProjection_.TransferMatrix();
+	}
+	else {
+		viewProjection_.UpdateMatrix();
 	}
 }
 
