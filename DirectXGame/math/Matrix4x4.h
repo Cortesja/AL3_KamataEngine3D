@@ -106,3 +106,8 @@ Matrix4x4 MakeRotateXYZ(const Vector3& theta);
 /// <param name="translate"></param>
 /// <returns></returns>
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
+
+/// <param name="translate"></param>
+/// <param name="rotate"></param>
+/// <returns></returns>
+Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& translate, const Vector3& rotate);

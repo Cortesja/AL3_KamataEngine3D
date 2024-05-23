@@ -297,10 +297,6 @@ Matrix4x4 RotateZ(const float& theta)
 	return result;
 }
 
-void update()
-{
-}
-
 Matrix4x4 MakeRotateXYZ(const Vector3& theta)
 {
 	Matrix4x4 rotX = RotateX(theta.x);

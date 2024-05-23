@@ -19,6 +19,12 @@ GameScene::~GameScene() {
 	worldTransformBlocks_.clear();
 }
 
+void GameScene::GenerateBlocks()
+{
+	uint32_t numBlockVertical = mapChipField_->GetNumBlockVertical();
+	uint32_t numBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
+}
+
 void GameScene::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
@@ -26,7 +32,7 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 
 	//プレイヤー用の初期化
-	playerTextureHandler_ = TextureManager::Load("cube/cube.jpg");
+	playerTextureHandler_ = TextureManager::Load("/cube/cube.jpg");
 	model_ = Model::Create();
 	viewProjection_.Initialize();
 
@@ -43,11 +49,6 @@ void GameScene::Initialize() {
 
 	const float kBlockHeight = 2.0f;
 	const float kBlockWidth = 2.0f;
-
-	worldTransformBlocks_.resize(kNumBlockVertical);
-	for (uint32_t i = 0; i < kNumBlockVertical; ++i) {
-		worldTransformBlocks_[i].resize(kNumBlockHorizontal);
-	}
 
 	for (uint32_t i = 0; i < kNumBlockVertical; ++i) {
 		for (uint32_t j = 0; j < kNumBlockHorizontal; ++j) {
@@ -71,6 +72,10 @@ void GameScene::Initialize() {
 	skyDome_ = new Skydome();
 	skyDome_->Initialize(modelSkydome_, &viewProjection_);
 
+	//MapChipField用の下書き
+	mapChipField_->Initialize();
+
+	worldTransformBlocks_.resize()
 }
 
 void GameScene::Update() {
