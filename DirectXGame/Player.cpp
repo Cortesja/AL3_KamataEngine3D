@@ -5,11 +5,10 @@ Player::Player()
 {
 }
 
-Player::~Player(){
-
+Player::~Player() {
 }
 
-void Player::Initialize(Model* model, uint32_t textureHandler, ViewProjection *viewProjection) {
+void Player::Initialize(Model* model, uint32_t textureHandler, ViewProjection* viewProjection) {
 	assert(model);
 	model_ = model;
 	textureHandle_ = textureHandler;

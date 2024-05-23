@@ -40,7 +40,7 @@ void GameScene::Initialize() {
 	player_->Initialize(model_, playerTextureHandler_, &viewProjection_);
 	//プレイヤーの初期化終了
 
-	//ブロック用な処理
+	//ブロックの下書き
 	blockModel_ = Model::Create();
 	blockTextureHandler_ = TextureManager::Load("cube/cube.jpg");
 
@@ -74,8 +74,6 @@ void GameScene::Initialize() {
 
 	//MapChipField用の下書き
 	mapChipField_->Initialize();
-
-	worldTransformBlocks_.resize()
 }
 
 void GameScene::Update() {
