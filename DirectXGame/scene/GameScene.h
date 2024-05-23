@@ -11,6 +11,7 @@
 #include "Matrix4x4.h"
 #include <vector>
 #include "DebugCamera.h"
+#include "Skydome.h"
 
 /// <summary>
 /// ゲームシーン
@@ -67,4 +68,8 @@ private: // メンバ変数
 
 	DebugCamera* debugCamera_ = nullptr;
 	bool isDebugCameraActive_ = false;
+
+	//SkyDome
+	Model *modelSkydome_ = nullptr;
+	Skydome *skyDome_ = nullptr;
 };

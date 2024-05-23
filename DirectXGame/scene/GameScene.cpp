@@ -9,6 +9,8 @@ GameScene::~GameScene() {
 	delete player_;
 	delete blockModel_;
 	delete debugCamera_;
+	delete modelSkydome_;
+	delete skyDome_;
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			delete worldTransformBlock;
@@ -63,6 +65,12 @@ void GameScene::Initialize() {
 
 	//デバッグカメラ生成
 	debugCamera_ = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
+
+	//SkyDome
+	modelSkydome_ = Model::CreateFromOBJ("Skydome", true);
+	skyDome_ = new Skydome();
+	skyDome_->Initialize(modelSkydome_, &viewProjection_);
+
 }
 
 void GameScene::Update() {
@@ -124,6 +132,7 @@ void GameScene::Draw() {
 	/// </summary>
 	
 	player_->Draw();
+	skyDome_->Draw();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
