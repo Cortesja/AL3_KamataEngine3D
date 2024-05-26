@@ -44,7 +44,7 @@ void MapChipField::LoadMapChipCsv(const std::string& filePath)
 
 		std::istringstream line_stream(line);
 
-		for (uint32_t j = 0; j < kNumBlockHorizontal; ++i) {
+		for (uint32_t j = 0; j < kNumBlockHorizontal; ++j) {
 
 			std::string word;
 			getline(line_stream, word, ',');
