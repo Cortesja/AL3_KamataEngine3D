@@ -12,7 +12,7 @@
 #include <vector>
 #include "DebugCamera.h"
 #include "Skydome.h"
-#include <MapChipField.h>
+#include "MapChipField.h"
 
 /// <summary>
 /// ゲームシーン
@@ -79,5 +79,6 @@ private: // メンバ変数
 	uint32_t blockTextureHandler_ = 0;
 	ViewProjection blockViewProjection_;
 
-	//MapChipField* mapChipField_;
+	//マップチップデータを待たせる変数
+	MapChipField* mapChipField_;
 };

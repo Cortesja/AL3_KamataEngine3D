@@ -11,6 +11,7 @@ GameScene::~GameScene() {
 	delete debugCamera_;
 	delete modelSkydome_;
 	delete skyDome_;
+	delete mapChipField_;
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			delete worldTransformBlock;
@@ -21,8 +22,21 @@ GameScene::~GameScene() {
 
 void GameScene::GenerateBlocks()
 {
-	//uint32_t numBlockVertical = mapChipField_->GetNumBlockVertical();
-	//uint32_t numBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
+	uint32_t numBlockVertical = mapChipField_->GetNumBlockVertical();
+	uint32_t numBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
+
+	worldTransformBlocks_.resize(numBlockVertical);
+	for (uint32_t i = 0; i < numBlockVertical; ++i) {
+		worldTransformBlocks_[i].resize(numBlockHorizontal);
+		for (uint32_t j = 0; j < numBlockHorizontal; ++j) {
+			if (mapChipField_->GetMapChipTypeByIndex(j, i) == MapChipType::kBlock) {
+				WorldTransform* worldTransform = new WorldTransform();
+				worldTransform->Initialize();
+				worldTransformBlocks_[i][j] = worldTransform;
+				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChipPositionByIndex(j, i);
+			}
+		}
+	}
 }
 
 void GameScene::Initialize() {
@@ -41,27 +55,34 @@ void GameScene::Initialize() {
 	//プレイヤーの初期化終了
 
 	//ブロックの下書き
+	//MapChipField用の下書き
+	mapChipField_ = new MapChipField;
+	mapChipField_->LoadMapChipCsv("Resources/block.csv");
+
 	blockModel_ = Model::Create();
 	blockTextureHandler_ = TextureManager::Load("cube/cube.jpg");
 
-	const uint32_t kNumBlockHorizontal = 20;
-	const uint32_t kNumBlockVertical = 10;
+	GenerateBlocks();
+#pragma region
+	//const uint32_t kNumBlockHorizontal = 20;
+	//const uint32_t kNumBlockVertical = 10;
+	//
+	//const float kBlockHeight = 2.0f;
+	//const float kBlockWidth = 2.0f;
 
-	const float kBlockHeight = 2.0f;
-	const float kBlockWidth = 2.0f;
-
-	worldTransformBlocks_.resize(kNumBlockVertical); 
-	for (uint32_t i = 0; i < kNumBlockVertical; ++i) {
-		worldTransformBlocks_[i].resize(kNumBlockHorizontal);
-		for (uint32_t j = 0; j < kNumBlockHorizontal; ++j) {
-			if (i % 2 == 1 && j % 2 == 1 || i % 2 == 0 && j % 2 == 0) {
-				worldTransformBlocks_[i][j] = new WorldTransform();
-				worldTransformBlocks_[i][j]->Initialize();
-				worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * j;
-				worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * i;
-			}
-		}
-	}
+	//worldTransformBlocks_.resize(kNumBlockVertical);
+	//for (uint32_t i = 0; i < kNumBlockVertical; ++i) {
+	//	worldTransformBlocks_[i].resize(kNumBlockHorizontal);
+	//	for (uint32_t j = 0; j < kNumBlockHorizontal; ++j) {
+	//		if (i % 2 == 1 && j % 2 == 1 || i % 2 == 0 && j % 2 == 0) {
+	//			worldTransformBlocks_[i][j] = new WorldTransform();
+	//			worldTransformBlocks_[i][j]->Initialize();
+	//			worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * j;
+	//			worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * i;
+	//		}
+	//	}
+	//}
+#pragma endregion
 	//ブロック終了
 
 	//デバッグカメラ生成
@@ -71,9 +92,6 @@ void GameScene::Initialize() {
 	modelSkydome_ = Model::CreateFromOBJ("Skydome", true);
 	skyDome_ = new Skydome();
 	skyDome_->Initialize(modelSkydome_, &viewProjection_);
-
-	//MapChipField用の下書き
-	//mapChipField_->Initialize();
 }
 
 void GameScene::Update() {
