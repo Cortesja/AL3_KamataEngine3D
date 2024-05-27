@@ -1,17 +1,18 @@
 #include "GameScene.h"
 #include "TextureManager.h"
+#include "ImGuiManager.h"
 #include <cassert>
 
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
-	delete model_;
+	delete playerModel_;
 	delete player_;
 	delete blockModel_;
-	delete debugCamera_;
+	delete mapChipField_;
 	delete modelSkydome_;
 	delete skyDome_;
-	delete mapChipField_;
+	delete debugCamera_;
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			delete worldTransformBlock;
@@ -45,52 +46,30 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	//プレイヤー用の初期化
-	playerTextureHandler_ = TextureManager::Load("/cube/cube.jpg");
-	model_ = Model::Create();
 	viewProjection_.Initialize();
 
-	player_ = new Player();
-	player_->Initialize(model_, playerTextureHandler_, &viewProjection_);
-	//プレイヤーの初期化終了
-
-	//ブロックの下書き
-	//MapChipField用の下書き
-	mapChipField_ = new MapChipField;
+	//MapChipFieldの初期化
+	mapChipField_ = new MapChipField();
 	mapChipField_->LoadMapChipCsv("Resources/block.csv");
 
 	blockModel_ = Model::Create();
 	blockTextureHandler_ = TextureManager::Load("cube/cube.jpg");
 
 	GenerateBlocks();
-#pragma region
-	//const uint32_t kNumBlockHorizontal = 20;
-	//const uint32_t kNumBlockVertical = 10;
-	//
-	//const float kBlockHeight = 2.0f;
-	//const float kBlockWidth = 2.0f;
 
-	//worldTransformBlocks_.resize(kNumBlockVertical);
-	//for (uint32_t i = 0; i < kNumBlockVertical; ++i) {
-	//	worldTransformBlocks_[i].resize(kNumBlockHorizontal);
-	//	for (uint32_t j = 0; j < kNumBlockHorizontal; ++j) {
-	//		if (i % 2 == 1 && j % 2 == 1 || i % 2 == 0 && j % 2 == 0) {
-	//			worldTransformBlocks_[i][j] = new WorldTransform();
-	//			worldTransformBlocks_[i][j]->Initialize();
-	//			worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * j;
-	//			worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * i;
-	//		}
-	//	}
-	//}
-#pragma endregion
-	//ブロック終了
+	//プレイヤーの初期化
+	player_ = new Player();
+	playerModel_ = Model::Create();
+	playerTextureHandler_ = TextureManager::Load("kamata.ico");
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(3, 18);
+	player_->Initialize(playerModel_, &viewProjection_, playerPosition, playerTextureHandler_);
 
 	//デバッグカメラ生成
 	debugCamera_ = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
 
 	//SkyDome
-	modelSkydome_ = Model::CreateFromOBJ("Skydome", true);
 	skyDome_ = new Skydome();
+	modelSkydome_ = Model::CreateFromOBJ("Skydome", true);
 	skyDome_->Initialize(modelSkydome_, &viewProjection_);
 }
 
@@ -110,8 +89,17 @@ void GameScene::Update() {
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_1)) {
 		isDebugCameraActive_ = true;
+		isDebugWindow_ = true;
 	}
 #endif
+
+	if (isDebugWindow_) {
+		ImGui::Begin("Debug Window");
+		ImGui::Text("playerPos: %f", player_->playerPosition_.x);
+		ImGui::End();
+
+		//ImGui::ShowDemoWindow();
+	}
 
 	if (isDebugCameraActive_) {
 		debugCamera_->Update();

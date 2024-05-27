@@ -33,5 +33,5 @@ private:
 	/// <summary>
 	/// モデル
 	/// </summary>
-	Model* model_ = nullptr;
+	Model* playerModel_ = nullptr;
 };

@@ -55,30 +55,25 @@ private: // メンバ変数
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
+	/// 
+	/// 
+	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
+	ViewProjection viewProjection_;
 
 	//プレイヤーを初期化するための
 	uint32_t playerTextureHandler_ = 0;
-	Model* model_ = nullptr;
-	ViewProjection viewProjection_;
-
+	Model* playerModel_ = nullptr;
 	Player* player_ = nullptr;
-	//プレイヤー使用する変数は終了
-
+	//Blocks
 	Model* blockModel_ = nullptr;
-	//uint32_t blockTextureHandler_ = 0u;
-
-	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
-
-	DebugCamera* debugCamera_ = nullptr;
-	bool isDebugCameraActive_ = false;
-
+	uint32_t blockTextureHandler_ = 0u;
 	//SkyDome
 	Model* modelSkydome_ = nullptr;
 	Skydome* skyDome_ = nullptr;
-
-	uint32_t blockTextureHandler_ = 0;
-	ViewProjection blockViewProjection_;
-
 	//マップチップデータを待たせる変数
 	MapChipField* mapChipField_;
+	//debug用
+	DebugCamera* debugCamera_ = nullptr;
+	bool isDebugCameraActive_ = false;
+	bool isDebugWindow_ = false;
 };
