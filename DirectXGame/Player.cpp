@@ -61,7 +61,7 @@ void Player::Update() {
 	//debugチェックworldTransform_ data
 	playerPosition_ = worldTransform_.translation_;
 
-	// makeaffineでmatworld出来上がり 呼び出すtransferMatrix
+	worldTransform_.UpdateMatrix();
 #pragma region
 	/*float destinationRotationYTable[] = {
 		std::numbers::pi_v<float> / 2.0f,
