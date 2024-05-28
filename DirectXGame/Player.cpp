@@ -4,6 +4,8 @@
 #include <algorithm>
 #include "DirectXCommon.h"
 #include "Input.h"
+#include "Vector3f.h"
+using MyNamespace::Matrix4x4f;
 
 Player::Player()
 {
@@ -23,9 +25,10 @@ void Player::Initialize(Model* model, ViewProjection *viewProjection, const Vect
 }
 
 void Player::Update() {
-	worldTransform_.TransferMatrix();
+	worldTransform_.UpdateMatrix();
 	bool inputRight = Input::GetInstance()->PushKey(DIK_RIGHT);
 	bool inputLeft = Input::GetInstance()->PushKey(DIK_LEFT);
+	Vector3f calc = {};
 
 	if (inputRight || inputLeft) {
 		//左右加速
@@ -37,18 +40,16 @@ void Player::Update() {
 			}
 			acceleration.x += kAcceleration;
 		}
-		else if (inputLeft) {
+		if (inputLeft) {
 			if (velocity_.x > 0.0f) {
 				velocity_.x *= (1.0f - kAttenuation);
 			}
 			acceleration.x -= kAcceleration;
 		}
-		else {
-			//？入力時は移動減衰をかける
-			velocity_.x *= (1.0f - kAttenuation);
-		}
+		//？入力時は移動減衰をかける
+		velocity_.x *= (1.0f - kAttenuation);
 		//加速/減速 velocity += acceleration
-		velocity_ = Add(velocity_, acceleration);
+		velocity_ = calc.Add(velocity_, acceleration);
 		//最大速度制限
 		velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed);
 	}
@@ -57,11 +58,9 @@ void Player::Update() {
 		velocity_.x = 0;
 	}
 	//移動 (worldTransform_.translation_ += velocity_;)
-	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
+	worldTransform_.translation_ = calc.Add(worldTransform_.translation_, velocity_);
 	//debugチェックworldTransform_ data
 	playerPosition_ = worldTransform_.translation_;
-
-	worldTransform_.UpdateMatrix();
 #pragma region
 	/*float destinationRotationYTable[] = {
 		std::numbers::pi_v<float> / 2.0f,

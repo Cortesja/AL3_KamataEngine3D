@@ -1,7 +1,9 @@
 #include "WorldTransform.h"
+using MyNamespace::Matrix4x4f;
 
 void WorldTransform::UpdateMatrix()
 {
-	matWorld_ = MakeAffineMatrix(scale_, rotation_, translation_);
+	Matrix4x4f calc = {};
+	matWorld_ = calc.MakeAffineMatrix(scale_, rotation_, translation_);
 	TransferMatrix();
 }
