@@ -1,7 +1,14 @@
 #include "GameScene.h"
+#include "Audio.h"
+#include "DirectXCommon.h"
 #include "TextureManager.h"
 #include "ImGuiManager.h"
 #include <cassert>
+#include "Player.h"
+#include "DebugCamera.h"
+#include "Skydome.h"
+#include "MapChipField.h"
+#include "CameraController.h"
 
 GameScene::GameScene() {}
 
@@ -13,6 +20,7 @@ GameScene::~GameScene() {
 	delete modelSkydome_;
 	delete skyDome_;
 	delete debugCamera_;
+	delete cameraController_;
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			delete worldTransformBlock;
@@ -41,36 +49,29 @@ void GameScene::GenerateBlocks()
 }
 
 void GameScene::Initialize() {
-
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
-
 	viewProjection_.Initialize();
-
 	//MapChipFieldの初期化
 	mapChipField_ = new MapChipField();
 	mapChipField_->LoadMapChipCsv("Resources/block.csv");
-
 	blockModel_ = Model::Create();
 	blockTextureHandler_ = TextureManager::Load("cube/cube.jpg");
-
 	GenerateBlocks();
-
 	//プレイヤーの初期化
 	player_ = new Player();
 	playerModel_ = Model::Create();
 	playerTextureHandler_ = TextureManager::Load("kamata.ico");
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(3, 18);
 	player_->Initialize(playerModel_, &viewProjection_, playerPosition, playerTextureHandler_);
-
 	//デバッグカメラ生成
 	debugCamera_ = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
-
 	//SkyDome
 	skyDome_ = new Skydome();
 	modelSkydome_ = Model::CreateFromOBJ("Skydome", true);
 	skyDome_->Initialize(modelSkydome_, &viewProjection_);
+	//CameraControllerの初期化
 }
 
 void GameScene::Update() {

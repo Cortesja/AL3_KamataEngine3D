@@ -1,18 +1,19 @@
 #pragma once
-
-#include "Audio.h"
-#include "DirectXCommon.h"
 #include "Input.h"
-#include "Model.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include "Player.h"
 #include "Matrix4x4.h"
 #include <vector>
-#include "DebugCamera.h"
-#include "Skydome.h"
-#include "MapChipField.h"
+
+class Audio;
+class DirectXCommon;
+class Model;
+class Player;
+class DebugCamera;
+class Skydome;
+class MapChipField;
+class CameraController;
 
 /// <summary>
 /// ゲームシーン
@@ -76,4 +77,6 @@ private: // メンバ変数
 	DebugCamera* debugCamera_ = nullptr;
 	bool isDebugCameraActive_ = false;
 	bool isDebugWindow_ = false;
+	//CameraController
+	CameraController* cameraController_ = nullptr;
 };

@@ -27,7 +27,7 @@ private:
 	MapChipData mapChipData_;
 	MapChipField* mapChipField_;
 public:
-	MapChipField() {}
+	MapChipField();
 	~MapChipField() {}
 
 	void ResetMapChipData();

@@ -34,48 +34,68 @@ void Player::Update() {
 		//左右加速
 		Vector3 acceleration = {};
 		if (inputRight) {
+
+			if (lrDirection_ != LRDirection::kRight) {
+				lrDirection_ = LRDirection::kRight;
+			}
+
 			if (velocity_.x < 0.0f) {
 				//速度と逆方向に入力は急ブレーキ
 				velocity_.x *= (1.0f - kAttenuation);
 			}
 			acceleration.x += kAcceleration;
+			//加速/減速 velocity_ += acceleration
+			velocity_ = calc.Add(velocity_, acceleration);
+			//最大速度制限
+			velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed);
 		}
 		if (inputLeft) {
+			if (lrDirection_ != LRDirection::kLeft) {
+				lrDirection_ = LRDirection::kLeft;
+			}
+
 			if (velocity_.x > 0.0f) {
 				velocity_.x *= (1.0f - kAttenuation);
 			}
 			acceleration.x -= kAcceleration;
+			//加速/減速 velocity_ += acceleration
+			velocity_ = calc.Add(velocity_, acceleration);
+			//最大速度制限
+			velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed);
 		}
+	}
+	else {
 		//？入力時は移動減衰をかける
 		velocity_.x *= (1.0f - kAttenuation);
-		//加速/減速 velocity += acceleration
-		velocity_ = calc.Add(velocity_, acceleration);
-		//最大速度制限
-		velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed);
-	}
-	//資料にないやつ
-	if (velocity_.x * velocity_.x < 0.001f) {
-		velocity_.x = 0;
+		//資料にないやつ
+		if (velocity_.x * velocity_.x < 0.001f) {
+			velocity_.x = 0;
+		}
 	}
 	//移動 (worldTransform_.translation_ += velocity_;)
 	worldTransform_.translation_ = calc.Add(worldTransform_.translation_, velocity_);
 	//debugチェックworldTransform_ data
 	playerPosition_ = worldTransform_.translation_;
 #pragma region
-	/*float destinationRotationYTable[] = {
+	float destinationRotationYTable[] = {
 		std::numbers::pi_v<float> / 2.0f,
 		std::numbers::pi_v<float> *3.0f / 2.0f
 	};
 
-	float destinationRotationY = destinationRotationYTable[0] + destinationRotationYTable[1];
+	float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrDirection_)];
 	float timeRatio = 1 - turnTimer_ / kTimeTurn;
 	float easing = 1 - powf(1 - timeRatio, 3);
 	float newRotationY = std::lerp(
 		turnFirstRotationY_,
 		destinationRotationY,
 		easing);
-	worldTransform_.rotation_.y = newRotationY;*/
+	worldTransform_.rotation_.y = newRotationY;
 #pragma endregion
+}
+
+const WorldTransform& Player::GetWorldTransform()
+{
+	return worldTransform_;
 }
 
 void Player::Draw() {

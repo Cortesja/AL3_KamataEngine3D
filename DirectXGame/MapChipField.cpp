@@ -11,6 +11,10 @@ namespace {
 	};
 }
 
+MapChipField::MapChipField()
+{
+}
+
 void MapChipField::ResetMapChipData()
 {
 	mapChipData_.data.clear();
