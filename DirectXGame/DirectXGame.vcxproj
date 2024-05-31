@@ -106,8 +106,8 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\Desktop\関数\Matrix4x4f.cpp" />
-    <ClCompile Include="..\..\..\..\Desktop\関数\Vector3f.cpp" />
+    <ClCompile Include="..\..\..\ゲーム制作\自作関数\関数\Matrix4x4f.cpp" />
+    <ClCompile Include="..\..\..\ゲーム制作\自作関数\関数\Vector3f.cpp" />
     <ClCompile Include="2d\ImGuiManager.cpp" />
     <ClCompile Include="base\DirectXCommon.cpp" />
     <ClCompile Include="base\WinApp.cpp" />
