@@ -20,7 +20,7 @@ GameScene::~GameScene() {
 	delete modelSkydome_;
 	delete skyDome_;
 	delete debugCamera_;
-	delete cameraController_;
+	//delete cameraController_;
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			delete worldTransformBlock;

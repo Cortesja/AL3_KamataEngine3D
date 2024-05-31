@@ -13,7 +13,7 @@ class Player;
 class DebugCamera;
 class Skydome;
 class MapChipField;
-class CameraController;
+//class CameraController;
 
 /// <summary>
 /// ゲームシーン
@@ -78,5 +78,5 @@ private: // メンバ変数
 	bool isDebugCameraActive_ = false;
 	bool isDebugWindow_ = false;
 	//CameraController
-	CameraController* cameraController_ = nullptr;
+	//CameraController* cameraController_ = nullptr;
 };

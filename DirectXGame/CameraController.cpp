@@ -11,8 +11,8 @@ void CameraController::Update()
 {
 }
 
-void CameraController::Reset()
-{
-	const WorldTransform& targetWorldTransform_ = {};
-	targetWorldTransform_ = target_->GetWorldTransform();
-}
+//void CameraController::Reset()
+//{
+//	const WorldTransform& targetWorldTransform_ = {};
+//	targetWorldTransform_ = target_->GetWorldTransform();
+//}
