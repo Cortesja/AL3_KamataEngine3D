@@ -1,3 +1,4 @@
+#define NOMINMAX
 #include "Player.h"
 #include <cassert>
 #include <numbers>
@@ -14,7 +15,7 @@ Player::Player()
 Player::~Player() {
 }
 
-void Player::Initialize(Model* model, ViewProjection *viewProjection, const Vector3& position, uint32_t playerTextureHandler) {
+void Player::Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position, uint32_t playerTextureHandler) {
 	assert(model);
 	model_ = model;
 	viewProjection_ = viewProjection;
@@ -24,8 +25,8 @@ void Player::Initialize(Model* model, ViewProjection *viewProjection, const Vect
 	worldTransform_.rotation_.y = std::numbers::pi_v<float> / 2.0f;
 }
 
-void Player::Update() {
-	worldTransform_.UpdateMatrix();
+void Player::Movement()
+{
 	bool inputRight = Input::GetInstance()->PushKey(DIK_RIGHT);
 	bool inputLeft = Input::GetInstance()->PushKey(DIK_LEFT);
 	Vector3f calc = {};
@@ -36,6 +37,7 @@ void Player::Update() {
 		if (inputRight) {
 
 			if (lrDirection_ != LRDirection::kRight) {
+				turnTimer_ = kTimeTurn;
 				lrDirection_ = LRDirection::kRight;
 			}
 
@@ -51,6 +53,7 @@ void Player::Update() {
 		}
 		if (inputLeft) {
 			if (lrDirection_ != LRDirection::kLeft) {
+				turnTimer_ = kTimeTurn;
 				lrDirection_ = LRDirection::kLeft;
 			}
 
@@ -72,25 +75,61 @@ void Player::Update() {
 			velocity_.x = 0;
 		}
 	}
+
 	//移動 (worldTransform_.translation_ += velocity_;)
 	worldTransform_.translation_ = calc.Add(worldTransform_.translation_, velocity_);
 	//debugチェックworldTransform_ data
 	playerPosition_ = worldTransform_.translation_;
-#pragma region
-	float destinationRotationYTable[] = {
-		std::numbers::pi_v<float> / 2.0f,
-		std::numbers::pi_v<float> *3.0f / 2.0f
-	};
+}
 
-	float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrDirection_)];
-	float timeRatio = 1 - turnTimer_ / kTimeTurn;
-	float easing = 1 - powf(1 - timeRatio, 3);
-	float newRotationY = std::lerp(
-		turnFirstRotationY_,
-		destinationRotationY,
-		easing);
-	worldTransform_.rotation_.y = newRotationY;
-#pragma endregion
+void Player::Rotation()
+{
+	if (turnTimer_ > 0.0f) {
+		turnTimer_ -= 1.0f / 60.0f;
+
+		float destinationRotationYTable[] = {
+			std::numbers::pi_v<float> / -1.0f,
+			std::numbers::pi_v<float> / 1.0f
+		};
+
+		float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrDirection_)];
+		float timeRatio = 1 - turnTimer_ / kTimeTurn;
+		float easing = 1 - powf(1 - timeRatio, 3);
+		float newRotationY = std::lerp(
+			turnFirstRotationY_,
+			destinationRotationY,
+			easing);
+		worldTransform_.rotation_.y = newRotationY;
+	}
+}
+
+void Player::Jump()
+{
+	Vector3f calc = {};
+	if (Input::GetInstance()->PushKey(DIK_UP) && onGround_) {
+		static const float upAccel = 0.9f;
+		velocity_.y = upAccel;
+	}
+
+	if (!onGround_) {
+		velocity_.y += kGravityAcceleration;
+		velocity_.y = std::max(velocity_.y, kLimitFallSpeed);
+		if (worldTransform_.translation_.y <= 2.001f) {
+			onGround_ = true;
+			velocity_.y = 0.0f;
+			worldTransform_.translation_.y = 2.0f;
+		}
+	}
+	if (velocity_.y > 0.0f) {
+		onGround_ = false;
+	}
+}
+
+void Player::Update() {
+	worldTransform_.UpdateMatrix();
+	Movement();
+	Rotation();
+	Jump();
 }
 
 const WorldTransform& Player::GetWorldTransform()

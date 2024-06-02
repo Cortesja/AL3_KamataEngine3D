@@ -19,21 +19,31 @@ public:
 	/// <param name="textureHandler">テクスチャーハンドル</param>
 	/// <param name="viewProjection">ビュープロジェクション</param>
 	void Initialize(Model* model, ViewProjection *viewProjecion, const Vector3& position, uint32_t playerTextureHandler);
-
+	/// <summary>
+	/// 左右移動
+	/// </summary>
+	void Movement();
+	/// <summary>
+	/// 回転
+	/// </summary>
+	void Rotation();
+	/// <summary>
+	/// ジャンプ
+	/// </summary>
+	void Jump();
 	/// <summary>
 	/// 更新
 	/// </summary>
 	void Update();
-
 	/// <summary>
 	/// 描画
 	/// </summary>
-	
-	const WorldTransform& GetWorldTransform();
 	void Draw();
+	const WorldTransform& GetWorldTransform();
 	//debug用
 	Vector3 playerPosition_ = {};
 	Vector3 GetPos() { return playerPosition_; }
+	bool isJump() { return onGround_; }
 
 private:
 	enum class LRDirection {
@@ -58,6 +68,14 @@ private:
 	static inline const float kLimitRunSpeed = 0.3f;
 
 	float turnFirstRotationY_ = 0.0f;
-	float turnTimer_ = 1.0f;
+	float turnTimer_ = 0.0f;
 	static inline const float kTimeTurn = 0.3f;
+	//ジャンプ
+	bool onGround_ = true;
+	//重力加速度 (下方向)
+	static inline const float kGravityAcceleration = -0.06f;
+	//最大落下速度 (下方向)
+	static inline const float kLimitFallSpeed = -0.3f;
+	//ジャンプ初速 (上方向)
+	static inline const float kJumpAcceleration = 0.01f;
 };

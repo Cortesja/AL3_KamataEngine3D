@@ -97,6 +97,8 @@ void GameScene::Update() {
 	if (isDebugWindow_) {
 		ImGui::Begin("Debug Window");
 		ImGui::Text("playerPos: %f", player_->playerPosition_.x);
+		ImGui::Text("playerPos.y: %f", player_->playerPosition_.y);
+		ImGui::Text("onGround_: %d", player_->isJump());
 		ImGui::End();
 
 		//ImGui::ShowDemoWindow();
