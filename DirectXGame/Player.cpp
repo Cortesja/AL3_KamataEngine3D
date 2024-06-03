@@ -105,12 +105,10 @@ void Player::Rotation()
 
 void Player::Jump()
 {
-	Vector3f calc = {};
 	if (Input::GetInstance()->PushKey(DIK_UP) && onGround_) {
 		static const float upAccel = 0.9f;
 		velocity_.y = upAccel;
 	}
-
 	if (!onGround_) {
 		velocity_.y += kGravityAcceleration;
 		velocity_.y = std::max(velocity_.y, kLimitFallSpeed);
