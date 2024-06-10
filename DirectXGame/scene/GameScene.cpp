@@ -102,6 +102,7 @@ void GameScene::Initialize() {
 	playerTextureHandler_ = TextureManager::Load("kamata.ico");
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(3, 18);
 	player_->Initialize(playerModel_, &viewProjection_, playerPosition, playerTextureHandler_);
+	player_->SetMapChipField(mapChipField_);
 	//デバッグカメラ生成
 	debugCamera_ = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
 	//SkyDome

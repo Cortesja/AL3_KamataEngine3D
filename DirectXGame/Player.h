@@ -4,12 +4,26 @@
 #include "WorldTransform.h"
 
 class WorldTransform;
+class MapChipField;
 /// <summary>
 /// 自キャラ
 /// </summary>
 class Player
 {
 public:
+	struct CollisionMapInfo {
+		bool ceiling = false;
+		bool landing = false;
+		bool hitWall = false;
+		Vector3 move;
+	};
+	enum class Corner {
+		kLeftTop,
+		kRightTop,
+		kLeftBottom,
+		kRightBottom,
+		kNumCorner //要素数
+	};
 	Player();
 	~Player();
 	/// <summary>
@@ -46,6 +60,16 @@ public:
 	const WorldTransform& GetWorldTransform() { return worldTransform_; }
 
 	const Vector3& GetVelocity() { return velocity_; }
+
+	/// <summary>
+	/// MapChipField型からプレイヤークラスに使えるように取得する関数
+	/// </summary>
+	/// <param name="mapChipField">マップチップデータが保留されている変数</param>
+	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
+
+	void MapCollisionInfo(CollisionMapInfo& info);
+	Vector3 CornerPostion(const Vector3& center, Corner corner);
+
 	//debug用
 	Vector3 playerPosition_ = {};
 	Vector3 GetPos() { return playerPosition_; }
@@ -84,4 +108,14 @@ private:
 	static inline const float kLimitFallSpeed = -0.3f;
 	//ジャンプ初速 (上方向)
 	static inline const float kJumpAcceleration = 0.01f;
+	//当たり判定の変数をよい
+	MapChipField* mapChipField_ = nullptr;
+	static inline const float kWidth = 2.0f;
+	static inline const float kHeight = 2.0f;
+	CollisionMapInfo info_;
+
+	void CollisionMapTop(CollisionMapInfo& info);
+	//void CollisionMapBottom(CollisionMapInfo& info);
+	//void CollisionMapRight(CollisionMapInfo& info);
+	//void CollisionMapLeft(CollisionMapInfo& info);
 };

@@ -12,6 +12,11 @@ struct MapChipData {
 	std::vector<std::vector<MapChipType>> data;
 };
 
+struct IndexSet {
+	uint32_t xIndex;
+	uint32_t yIndex;
+};
+
 /// <summary>
 /// マップチップフィールド
 /// </summary>
@@ -26,6 +31,7 @@ private:
 
 	MapChipData mapChipData_;
 	MapChipField* mapChipField_;
+	IndexSet indexSet_;
 public:
 	MapChipField() = default;
 	~MapChipField() = default;
@@ -38,4 +44,6 @@ public:
 
 	MapChipType GetMapChipTypeByIndex(uint32_t xIndex, uint32_t yIndex);
 	Vector3 GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex);
+
+	IndexSet GetMapChipIndexSetByPosition(const Vector3& position);
 };

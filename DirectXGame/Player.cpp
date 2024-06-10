@@ -6,6 +6,7 @@
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "Vector3f.h"
+#include "MapChipField.h"
 using MyNamespace::Matrix4x4f;
 
 Player::Player()
@@ -105,8 +106,13 @@ void Player::Rotation()
 
 void Player::Jump()
 {
+	/*for (int i = 0; i < mapChipField_->GetNumBlockVertical(); i++) {
+		for (int j = 0; j < mapChipField_->GetNumBlockHorizontal(); i++) {
+		
+		}
+	}*/
 	if (Input::GetInstance()->PushKey(DIK_UP) && onGround_) {
-		static const float upAccel = 0.9f;
+		static const float upAccel = 1.9f;
 		velocity_.y = upAccel;
 	}
 	if (!onGround_) {
@@ -124,12 +130,87 @@ void Player::Jump()
 }
 
 void Player::Update() {
+	//移動入力
+	//移動量を加味して衝突判定する
+	//判定結果を反映して移動させる
+	//天井に接触している場合の処理
+	//壁に接触している場合の処理
+	//接地状態の切り替え
+	//旋回制御 (rotation )
+	//行列計算
+	CollisionMapInfo info;
 	worldTransform_.UpdateMatrix();
 	Movement();
 	Rotation();
 	Jump();
+	MapCollisionInfo(info);
+	CollisionMapTop(info);
 }
 
 void Player::Draw() {
 	model_->Draw(worldTransform_, *viewProjection_, textureHandle_);
 }
+
+void Player::MapCollisionInfo(CollisionMapInfo& info)
+{
+	info.move = velocity_;
+	info.landing = onGround_;
+	info.ceiling = false;
+	info.hitWall = false;
+
+
+
+	CollisionMapTop(info);
+	//CollisionMapBottom(info);
+	//CollisionMapRight(info);
+	//CollisionMapLeft(info);
+}
+
+Vector3 Player::CornerPostion(const Vector3& center, Corner corner)
+{
+	Vector3f calc = {};
+	Vector3 offsetTable[static_cast<uint32_t>(Corner::kNumCorner)] = {
+		{-kWidth / 2.0f, +kHeight / 2.0f, 0}, //leftTop
+		{+kWidth / 2.0f, +kHeight / 2.0f, 0}, //rightTop
+		{-kWidth / 2.0f, -kHeight / 2.0f, 0}, //leftBottom
+		{+kWidth / 2.0f, -kHeight / 2.0f, 0} //rightBottom
+	};
+
+	return calc.Add(center,offsetTable[static_cast<uint32_t>(corner)]);
+}
+
+void Player::CollisionMapTop(CollisionMapInfo& info)
+{
+	Vector3f calc = {};
+	std::array<Vector3, static_cast<uint32_t>(Corner::kNumCorner)> positionsNew;
+	for (uint32_t i = 0; i < positionsNew.size(); ++i) {
+		positionsNew[i] = CornerPostion(calc.Add(worldTransform_.translation_, info.move), static_cast<Corner>(i));
+	}
+
+	MapChipType mapChipType;
+	bool hit = false;
+	IndexSet indexSet;
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[static_cast<uint32_t>(Corner::kLeftTop)]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+
+	if (mapChipType == MapChipType::kBlock) {
+		hit = true;
+	}
+	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[static_cast<uint32_t>(Corner::kRightTop)]);
+	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
+	if (mapChipType == MapChipType::kBlock) {
+		hit = true;
+	}
+}
+
+//void Player::CollisionMapBottom(CollisionMapInfo& info)
+//{
+//}
+//
+//void Player::CollisionMapRight(CollisionMapInfo& info)
+//{
+//}
+//
+//void Player::CollisionMapLeft(CollisionMapInfo& info)
+//{
+//}
