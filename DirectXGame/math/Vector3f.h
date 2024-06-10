@@ -23,6 +23,13 @@ public:
 	/// <returns></returns>
 	Vector3 Add(const Vector3& v1, const Vector3& v2);
 	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="v1"></param>
+	/// <param name="k"></param>
+	/// <returns></returns>
+	Vector3 Add(const Vector3& v1, float k);
+	/// <summary>
 	/// 減算
 	/// </summary>
 	/// <param name="v1"></param>

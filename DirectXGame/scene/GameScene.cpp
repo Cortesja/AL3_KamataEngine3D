@@ -10,8 +10,6 @@
 #include "MapChipField.h"
 #include "CameraController.h"
 
-GameScene::GameScene() {}
-
 GameScene::~GameScene() {
 	delete playerModel_;
 	delete player_;
@@ -20,13 +18,52 @@ GameScene::~GameScene() {
 	delete modelSkydome_;
 	delete skyDome_;
 	delete debugCamera_;
-	//delete cameraController_;
+	delete cameraController_;
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			delete worldTransformBlock;
 		}
 	}
 	worldTransformBlocks_.clear();
+}
+
+void GameScene::Debug()
+{
+
+#ifdef _DEBUG
+	if (!isDebugCameraActive_ && input_->TriggerKey(DIK_1)) {
+		isDebugCameraActive_ = true;
+		isDebugWindow_ = true;
+	}
+	else if (isDebugCameraActive_ && input_->TriggerKey(DIK_1)) {
+		isDebugCameraActive_ = false;
+		isDebugWindow_ = false;
+	}
+
+	if (isDebugWindow_) {
+		ImGui::Begin("Debug Window");
+		ImGui::Text("cameraTarget: %f", cameraController_->GetTargetPos().x);
+		ImGui::Text("currentPos: %f", cameraController_->GetCurrentPos().x);
+		ImGui::Text("onGround_: %d", player_->isJump());
+
+		ImGui::Text("playerPos: %f", player_->GetPos().x);
+		ImGui::End();
+
+		//ImGui::ShowDemoWindow();
+	}
+#endif // DEBUG_
+
+	if (isDebugCameraActive_) {
+		debugCamera_->Update();
+		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
+		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+		viewProjection_.TransferMatrix();
+	}
+	else {
+		viewProjection_.matView = cameraController_->GetViewProjection().matView;
+		viewProjection_.matProjection = cameraController_->GetViewProjection().matProjection;
+		viewProjection_.UpdateMatrix();
+	}
 }
 
 void GameScene::GenerateBlocks()
@@ -72,11 +109,18 @@ void GameScene::Initialize() {
 	modelSkydome_ = Model::CreateFromOBJ("Skydome", true);
 	skyDome_->Initialize(modelSkydome_, &viewProjection_);
 	//CameraControllerの初期化
+	cameraController_ = new CameraController();
+	cameraController_->Initialize(&viewProjection_);
+	cameraController_->SetTarget(player_);
+	cameraController_->SetMovableArea({ 20.0f, 180.0f, 10.0f,60.0f });
+	cameraController_->Reset();
 }
 
 void GameScene::Update() {
 	player_->Update();
 	debugCamera_->Update();
+	cameraController_->Update();
+	Debug();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -85,34 +129,6 @@ void GameScene::Update() {
 			}
 			worldTransformBlock->UpdateMatrix();
 		}
-	}
-
-#ifdef _DEBUG
-	if (input_->TriggerKey(DIK_1)) {
-		isDebugCameraActive_ = true;
-		isDebugWindow_ = true;
-	}
-#endif
-
-	if (isDebugWindow_) {
-		ImGui::Begin("Debug Window");
-		ImGui::Text("playerPos: %f", player_->playerPosition_.x);
-		ImGui::Text("playerPos.y: %f", player_->playerPosition_.y);
-		ImGui::Text("onGround_: %d", player_->isJump());
-		ImGui::End();
-
-		//ImGui::ShowDemoWindow();
-	}
-
-	if (isDebugCameraActive_) {
-		debugCamera_->Update();
-		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
-		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
-
-		viewProjection_.TransferMatrix();
-	}
-	else {
-		viewProjection_.UpdateMatrix();
 	}
 }
 

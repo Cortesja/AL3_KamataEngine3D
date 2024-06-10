@@ -39,7 +39,13 @@ public:
 	/// 描画
 	/// </summary>
 	void Draw();
-	const WorldTransform& GetWorldTransform();
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <returns></returns>
+	const WorldTransform& GetWorldTransform() { return worldTransform_; }
+
+	const Vector3& GetVelocity() { return velocity_; }
 	//debug用
 	Vector3 playerPosition_ = {};
 	Vector3 GetPos() { return playerPosition_; }
@@ -53,7 +59,7 @@ private:
 	//ワールド変換データ
 	WorldTransform worldTransform_;
 	//ビュープロジェクション
-	ViewProjection* viewProjection_;
+	ViewProjection *viewProjection_;
 	//モデル
 	Model* model_ = nullptr;
 	//テクスチャーハンドル

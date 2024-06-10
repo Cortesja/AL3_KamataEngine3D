@@ -27,8 +27,8 @@ private:
 	MapChipData mapChipData_;
 	MapChipField* mapChipField_;
 public:
-	MapChipField();
-	~MapChipField() {}
+	MapChipField() = default;
+	~MapChipField() = default;
 
 	void ResetMapChipData();
 	void LoadMapChipCsv(const std::string& filePath);

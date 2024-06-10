@@ -29,7 +29,7 @@ private:
 	/// <summary>
 	/// 
 	/// </summary>
-	ViewProjection* viewProjection_;
+	ViewProjection* viewProjection_ = nullptr;
 	/// <summary>
 	/// モデル
 	/// </summary>

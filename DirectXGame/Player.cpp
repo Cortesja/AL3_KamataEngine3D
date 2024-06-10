@@ -15,7 +15,7 @@ Player::Player()
 Player::~Player() {
 }
 
-void Player::Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position, uint32_t playerTextureHandler) {
+void Player::Initialize(Model* model, ViewProjection *viewProjection, const Vector3& position, uint32_t playerTextureHandler) {
 	assert(model);
 	model_ = model;
 	viewProjection_ = viewProjection;
@@ -128,11 +128,6 @@ void Player::Update() {
 	Movement();
 	Rotation();
 	Jump();
-}
-
-const WorldTransform& Player::GetWorldTransform()
-{
-	return worldTransform_;
 }
 
 void Player::Draw() {
