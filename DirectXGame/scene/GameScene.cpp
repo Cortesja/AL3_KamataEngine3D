@@ -45,7 +45,8 @@ void GameScene::Debug()
 		ImGui::Text("cameraTarget: %f", cameraController_->GetTargetPos().x);
 		ImGui::Text("currentPos: %f", cameraController_->GetCurrentPos().x);
 		ImGui::Text("onGround_: %d", player_->isJump());
-
+		ImGui::Text("PlayerIndexX: %d", player_->GetIndexX());
+		ImGui::Text("PlayerIndexY: %d", player_->GetIndexY());
 		ImGui::Text("playerPos: %f", player_->GetPos().x);
 		ImGui::End();
 

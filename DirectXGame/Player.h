@@ -73,8 +73,13 @@ public:
 	//debug用
 	Vector3 playerPosition_ = {};
 	Vector3 GetPos() { return playerPosition_; }
+
 	bool isJump() { return onGround_; }
 
+	int playerIndexX;
+	int playerIndexY;
+	int GetIndexX() { return playerIndexX; }
+	int GetIndexY() { return playerIndexY; }
 private:
 	enum class LRDirection {
 		kRight,
@@ -113,9 +118,10 @@ private:
 	static inline const float kWidth = 2.0f;
 	static inline const float kHeight = 2.0f;
 	CollisionMapInfo info_;
+	Corner playerCorner_;
 
 	void CollisionMapTop(CollisionMapInfo& info);
-	//void CollisionMapBottom(CollisionMapInfo& info);
-	//void CollisionMapRight(CollisionMapInfo& info);
-	//void CollisionMapLeft(CollisionMapInfo& info);
+	void CollisionMapBottom(CollisionMapInfo& info);
+	void CollisionMapRight(CollisionMapInfo& info);
+	void CollisionMapLeft(CollisionMapInfo& info);
 };
