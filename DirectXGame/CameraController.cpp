@@ -26,29 +26,33 @@ void CameraController::Lerp(Vector3 &viewProjection, Vector3 &targetDestination)
 	Vector3f calc = {};
 	Vector3 targetSpeed = target_->GetVelocity();
 	const WorldTransform& targetWorldTransform = target_->GetWorldTransform();
+	Vector3 temp = {};
 
 	if (targetSpeed.x > 0.0f) {
-		Vector3 temp = calc.Add(targetSpeed, kVelocityBias);
-		Vector3 temp1 = calc.Add(temp, targetOffset_);
+		temp = calc.Add(targetSpeed, kVelocityBias);
+		Vector3 temp1 = calc.Add(temp, targetOffset_); //OffsetとkVelocityを求める
+		targetDestination = calc.Add(targetWorldTransform.translation_, temp1);//カメラの目指している位置を求める
 
-		targetDestination = calc.Add(targetWorldTransform.translation_, temp1);
-		if (viewProjection.x < targetDestination.x) {
-			viewProjection.x += kInterpolationRate;
-		}
+		kInterpolationRate = 0.25f;
 	}
-	if (targetSpeed.x < 0.0f) {
-		Vector3 temp = calc.Add(targetSpeed, -kVelocityBias);
-		Vector3 temp1 = calc.Add(temp, targetOffset_);
+	else if (targetSpeed.x < 0.0f) {
+		temp = calc.Add(targetSpeed, -kVelocityBias);
+		Vector3 temp1 = calc.Add(temp, targetOffset_); //OffsetとkVelocityを求める
+		targetDestination = calc.Add(targetWorldTransform.translation_, temp1);//カメラの目指している位置を求める
+		kInterpolationRate = 0.25f;
+	}
+	else {
+		targetDestination = calc.Add(targetWorldTransform.translation_, targetOffset_);
+		kInterpolationRate = 0.15f;
+	}
 
-		targetDestination = calc.Add(targetWorldTransform.translation_, temp1);
+	if (viewProjection.x < targetDestination.x) { //カメラの原位置が小なりだとkInterpolationを＋
+		viewProjection.x += kInterpolationRate;
+	}
+	if (viewProjection.x > targetDestination.x) {
+		viewProjection.x -= kInterpolationRate;
+	}
 
-			if (viewProjection.x > targetDestination.x) {
-				viewProjection.x -= kInterpolationRate;
-			}
-	}
-	if (targetSpeed.x == 0.0f) {
-		Reset();
-	}
 
 	//debug用
 	cameraTarget_ = targetDestination_;
