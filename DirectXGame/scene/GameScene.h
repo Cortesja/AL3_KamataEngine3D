@@ -14,6 +14,7 @@ class DebugCamera;
 class Skydome;
 class MapChipField;
 class CameraController;
+class Enemy;
 
 /// <summary>
 /// ゲームシーン
@@ -87,4 +88,8 @@ private: // メンバ変数
 	bool isDebugWindow_ = false;
 	//CameraController
 	CameraController* cameraController_ = nullptr;
+	//Enemy
+	uint32_t enemyTextureHandler_ = 0;
+	Model* enemyModel_ = nullptr;
+	Enemy* enemy_ = nullptr;
 };

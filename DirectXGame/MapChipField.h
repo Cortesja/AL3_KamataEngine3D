@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include "Vector3.h"
+#include "CameraController.h"
 
 enum class MapChipType {
 	kBlank,
@@ -16,7 +17,6 @@ struct IndexSet {
 	uint32_t xIndex;
 	uint32_t yIndex;
 };
-
 /// <summary>
 /// マップチップフィールド
 /// </summary>
@@ -44,6 +44,7 @@ public:
 
 	MapChipType GetMapChipTypeByIndex(uint32_t xIndex, uint32_t yIndex);
 	Vector3 GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex);
-
 	IndexSet GetMapChipIndexSetByPosition(const Vector3& position);
+
+	Rect GetRectByIndex(uint32_t xIndex, uint32_t yIndex);
 };

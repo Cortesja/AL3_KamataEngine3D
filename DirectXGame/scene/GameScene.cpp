@@ -9,6 +9,7 @@
 #include "Skydome.h"
 #include "MapChipField.h"
 #include "CameraController.h"
+#include "Enemy.h"
 
 GameScene::~GameScene() {
 	delete playerModel_;
@@ -19,6 +20,8 @@ GameScene::~GameScene() {
 	delete skyDome_;
 	delete debugCamera_;
 	delete cameraController_;
+	delete enemyModel_;
+	delete enemy_;
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			delete worldTransformBlock;
@@ -116,12 +119,20 @@ void GameScene::Initialize() {
 	cameraController_->SetTarget(player_);
 	cameraController_->SetMovableArea({ 20.0f, 180.0f, 10.0f,60.0f });
 	cameraController_->Reset();
+	//Enemyの初期化
+	enemy_ = new Enemy();
+	enemyModel_ = Model::Create();
+	enemyTextureHandler_ = TextureManager::Load("kamata.ico");
+	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(8, 18);
+	enemy_->Initialize(enemyModel_, &viewProjection_, enemyPosition, enemyTextureHandler_);
+	enemy_->SetMapChipField(mapChipField_);
 }
 
 void GameScene::Update() {
 	player_->Update();
 	debugCamera_->Update();
 	cameraController_->Update();
+	enemy_->Update();
 	Debug();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
@@ -163,6 +174,7 @@ void GameScene::Draw() {
 
 	player_->Draw();
 	skyDome_->Draw();
+	enemy_->Draw();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {

@@ -108,9 +108,9 @@ private:
 	//ジャンプ
 	bool onGround_ = true;
 	//重力加速度 (下方向)
-	static inline const float kGravityAcceleration = -0.06f;
+	static inline const float kGravityAcceleration = -0.01f;
 	//最大落下速度 (下方向)
-	static inline const float kLimitFallSpeed = -0.3f;
+	static inline const float kLimitFallSpeed = -0.2f;
 	//ジャンプ初速 (上方向)
 	static inline const float kJumpAcceleration = 0.01f;
 	//当たり判定の変数をよい
