@@ -61,8 +61,8 @@ private:
 	Rect movableArea_{ 0, 100, 0, 100 };
 	Vector3 targetDestination_ = {};
 
-	float kInterpolationRate = 0.25f;
-	static inline const float kVelocityBias = 7.0f;
+	float kInterpolationRate = 0.1f;
+	static inline const float kVelocityBias = 0.8f;
 
 	//debug用
 	Vector3 cameraTarget_ = {};
