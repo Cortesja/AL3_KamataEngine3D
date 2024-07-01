@@ -136,8 +136,8 @@ void Player::Update() {
 	worldTransform_.UpdateMatrix();
 	Movement();
 	Rotation();
-	Jump();
 	MapCollisionInfo(info_);
+	Jump();
 }
 
 void Player::Draw() {

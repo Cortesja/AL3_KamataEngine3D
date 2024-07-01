@@ -101,7 +101,7 @@ void GameScene::Initialize() {
 	player_ = new Player();
 	playerModel_ = Model::Create();
 	playerTextureHandler_ = TextureManager::Load("kamata.ico");
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(3, 18);
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(32, 18);
 	player_->Initialize(playerModel_, &viewProjection_, playerPosition, playerTextureHandler_);
 	player_->SetMapChipField(mapChipField_);
 	//デバッグカメラ生成
