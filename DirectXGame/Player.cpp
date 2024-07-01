@@ -107,7 +107,7 @@ void Player::Rotation()
 void Player::Jump()
 {
 	if (Input::GetInstance()->PushKey(DIK_UP) && onGround_) {
-		static const float upAccel = 1.9f;
+		static const float upAccel = 0.9f;
 		velocity_.y = upAccel;
 	}
 	if (!onGround_) {
@@ -158,7 +158,15 @@ void Player::MapCollisionInfo(CollisionMapInfo& info)
 		info.landing = false;
 	}
 	CollisionMapRight(info);
+	if (info_.hitWall) {
+		velocity_.x *= (1.0f - kAttenuation);
+		info.hitWall = false;
+	}
 	CollisionMapLeft(info);
+	if (info_.hitWall) {
+		velocity_.x *= (1.0f - kAttenuation);
+		info.hitWall = false;
+	}
 }
 
 Vector3 Player::CornerPostion(const Vector3& center, Corner corner)
@@ -245,7 +253,7 @@ void Player::CollisionMapBottom(CollisionMapInfo& info)
 	}
 	if (hitRight || hitLeft) {
 		info.landing = true;
-		velocity_.y *= (1.0f - kAttenuation);
+		velocity_.x *= (1.0f - kAttenuation);
 		velocity_.y = 0.0f;
 		worldTransform_.translation_.y = mapChipField_->GetMapChipPositionByIndex(indexSet2.xIndex, indexSet2.yIndex - 1).y;
 	}
@@ -287,7 +295,7 @@ void Player::CollisionMapRight(CollisionMapInfo& info)
 	if (hitTop) {
 		info.hitWall = true;
 		velocity_.x = 0.0f;
-		//worldTransform_.translation_.x = mapChipField_->GetMapChipPositionByIndex(indexSetBottom.xIndex - 1, indexSetBottom.yIndex).x;
+		worldTransform_.translation_.x = mapChipField_->GetMapChipPositionByIndex(indexSetBottom.xIndex - 1, indexSetBottom.yIndex).x;
 	}
 }
 
@@ -299,7 +307,7 @@ void Player::CollisionMapLeft(CollisionMapInfo& info)
 	Vector3f calc = {};
 	std::array<Vector3, static_cast<uint32_t>(Corner::kNumCorner)> positionsNew;
 	for (uint32_t i = 0; i < positionsNew.size(); ++i) {
-		positionsNew[i] = CornerPostion(calc.Add(playerPosition_, info.move), static_cast<Corner>(i));
+		positionsNew[i] = CornerPostion(worldTransform_.translation_, static_cast<Corner>(i));
 	}
 	
 	MapChipType mapChipTypeTop;
@@ -324,6 +332,6 @@ void Player::CollisionMapLeft(CollisionMapInfo& info)
 	if (hitTop) {
 		info.hitWall = true;
 		velocity_.x = 0.0f;
-		//worldTransform_.translation_.x = mapChipField_->GetMapChipPositionByIndex(indexSetBottom.xIndex + 1, indexSetBottom.yIndex).x;
+		worldTransform_.translation_.x = mapChipField_->GetMapChipPositionByIndex(indexSetBottom.xIndex + 1, indexSetBottom.yIndex).x;
 	}
 }

@@ -55,7 +55,7 @@ private:
 	Vector3 targetDestination_ = {};
 
 	float kInterpolationRate = 0.25f;
-	static inline const float kVelocityBias = -2.0f; //7.0
+	static inline const float kVelocityBias = 5.0f; //7.0
 
 	//debug用
 	Vector3 cameraTarget_ = {};

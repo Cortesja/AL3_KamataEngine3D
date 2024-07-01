@@ -99,6 +99,7 @@ private:
 
 	static inline const float kAcceleration = 0.01f;//数値;
 	static inline const float kAttenuation = 0.03f;
+	static inline const float kAttenuationLanding = 0.5f;
 
 	static inline const float kLimitRunSpeed = 0.3f;
 
@@ -115,7 +116,7 @@ private:
 	static inline const float kJumpAcceleration = 0.01f;
 	//当たり判定の変数をよい
 	MapChipField* mapChipField_ = nullptr;
-	static inline const float kWidth = 2.0f;
+	static inline const float kWidth = 1.99f;
 	static inline const float kHeight = 2.0f;
 	CollisionMapInfo info_;
 	Corner playerCorner_;
